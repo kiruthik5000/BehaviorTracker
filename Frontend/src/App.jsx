@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
 import DSARevision from './pages/DSARevision';
+import NeonIDE from './pages/NeonIDE';
 import Sidebar from './components/Sidebar';
 
 // We create a wrapper layout that keeps the Sidebar persistent
@@ -26,6 +27,7 @@ function App() {
         <Route path="/dsa" element={<Layout><DSARevision /></Layout>} />
         <Route path="/analytics" element={<Layout><Analytics /></Layout>} />
         <Route path="/settings" element={<Layout><Settings /></Layout>} />
+        <Route path="/workbench" element={<NeonIDE />} />
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </BrowserRouter>

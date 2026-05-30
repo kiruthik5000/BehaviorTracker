@@ -1,13 +1,16 @@
-const Groq = require('groq-sdk');
+const { OpenAI } = require('openai');
 
 const modifyScheduleWithAI = async (currentSessions, userPrompt, clientApiKey) => {
   try {
-    const apiKey = clientApiKey || process.env.GROQ_API_KEY;
+    const apiKey = clientApiKey || process.env.HF_API_KEY || process.env.HF_TOKEN;
     if (!apiKey) {
-        throw new Error('No Groq API key configured. Please set it in Settings or your .env file.');
+        throw new Error('No Hugging Face API key configured. Please set it in Settings or your .env file.');
     }
     
-    const groq = new Groq({ apiKey });
+    const client = new OpenAI({
+      baseURL: "https://router.huggingface.co/v1",
+      apiKey: apiKey,
+    });
     
     const systemInstruction = `
 You are an expert scheduling assistant. Your job is to modify an existing daily schedule based on a user's prompt.
@@ -36,14 +39,14 @@ User Request: "${userPrompt}"
 Ensure output is ONLY a valid JSON object with the "sessions" key. Do not include markdown formatting, just the raw JSON object.
     `;
 
-    const response = await groq.chat.completions.create({
+    const response = await client.chat.completions.create({
+      model: "meta-llama/Llama-3.3-70B-Instruct:groq",
       messages: [
         {
           role: "system",
           content: systemInstruction,
         }
       ],
-      model: "llama-3.3-70b-versatile",
       response_format: { type: "json_object" },
     });
 
