@@ -5,6 +5,7 @@ const connectDB = require('./config/db');
 const logRoutes = require('./routes/logRoutes');
 const aiRoutes = require('./routes/aiRoutes');
 const dsaRoutes = require('./routes/dsaRoutes');
+const mcqRoutes = require('./routes/mcqRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use('/api/logs', logRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/dsa', dsaRoutes);
+app.use('/api/mcqs', mcqRoutes);
 
 // Connect DB and Start Server
 connectDB().then(() => {

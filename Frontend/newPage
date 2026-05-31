@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EduAssess Pro - NeonIDE</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;family=Geist:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-tertiary-container": "#400071",
+                "on-primary-container": "#00285d",
+                "tertiary-fixed": "#f0dbff",
+                "on-primary-fixed-variant": "#004395",
+                "outline": "#8c909f",
+                "on-tertiary-fixed-variant": "#6900b3",
+                "secondary-fixed": "#6ffbbe",
+                "on-tertiary": "#490080",
+                "secondary": "#3b82f6",
+                "surface-container": "#1e293b",
+                "secondary-container": "#00a572",
+                "surface-container-highest": "#2d3449",
+                "primary-container": "#3b82ff",
+                "tertiary": "#ddb7ff",
+                "on-error": "#690005",
+                "on-secondary-fixed": "#002113",
+                "primary-fixed-dim": "#adc6ff",
+                "inverse-surface": "#dae2fd",
+                "surface-container-high": "#222a3d",
+                "on-primary-fixed": "#001a42",
+                "on-tertiary-fixed": "#2c0051",
+                "on-secondary": "#003824",
+                "on-surface-variant": "#c2c6d6",
+                "surface": "#0f172a",
+                "error": "#ffb4ab",
+                "tertiary-container": "#b76dff",
+                "outline-variant": "#334155",
+                "inverse-on-surface": "#283044",
+                "primary-fixed": "#d8e2ff",
+                "on-surface": "#f8fafc",
+                "error-container": "#93000a",
+                "on-background": "#f8fafc",
+                "inverse-primary": "#005ac2",
+                "secondary-fixed-dim": "#4edea3",
+                "on-secondary-container": "#00311f",
+                "surface-container-lowest": "#060e20",
+                "surface-variant": "#2d3449",
+                "primary": "#3b82f6",
+                "on-primary": "#ffffff",
+                "surface-tint": "#adc6ff",
+                "surface-bright": "#31394d",
+                "on-error-container": "#ffdad6",
+                "tertiary-fixed-dim": "#ddb7ff",
+                "background": "#0f172a",
+                "surface-dim": "#0b1326",
+                "surface-container-low": "#131b2e",
+                "on-secondary-fixed-variant": "#005236",
+                "code-bg": "#12131d"
+            },
+            "borderRadius": {
+                "DEFAULT": "1rem",
+                "lg": "1.5rem",
+                "xl": "2rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "stack-md": "16px",
+                "stack-lg": "32px",
+                "gutter": "16px",
+                "unit": "4px",
+                "stack-sm": "8px",
+                "container-margin": "24px"
+            },
+            "fontFamily": {
+                "headline-lg-mobile": ["Geist"],
+                "label-sm": ["JetBrains Mono"],
+                "code-md": ["JetBrains Mono"],
+                "headline-lg": ["Geist"],
+                "headline-xl": ["Geist"],
+                "body-md": ["Geist"]
+            },
+            "fontSize": {
+                "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "code-md": ["14px", {"lineHeight": "20px", "fontWeight": "450"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scroll-hide::-webkit-scrollbar { display: none; }
+        .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .choice-card:hover {
+            background-color: #334155;
+            border-color: #3b82f6;
+        }
+        .choice-card.active {
+            border-color: #3b82f6;
+            border-width: 2px;
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen selection:bg-primary/30">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-gutter h-16 bg-surface-container border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-xl font-bold text-primary">EduAssess Pro</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 text-on-surface-variant bg-background px-3 py-1 rounded-lg border border-outline-variant">
+<span class="material-symbols-outlined text-[20px]" data-icon="timer">timer</span>
+<span class="font-label-sm text-label-sm text-tertiary">24:15 Remaining</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-on-surface transition-colors" data-icon="help_outline">help_outline</button>
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-surface-container-highest transition-colors cursor-pointer border border-transparent hover:border-outline-variant">
+<span class="material-symbols-outlined text-primary" data-icon="account_circle">account_circle</span>
+<span class="font-label-md text-sm">Alex Rivera</span>
+</div>
+</div>
+</div>
+</header>
+<!-- SideNavBar (Question Navigator) -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-64px-72px)] w-64 p-4 flex flex-col bg-surface-container border-r border-outline-variant">
+<div class="px-2 py-4 border-b border-outline-variant/30 mb-4">
+<h2 class="font-headline-lg text-lg text-on-surface mb-1">Question Map</h2>
+<p class="font-label-sm text-label-sm text-tertiary">2 of 20 Completed</p>
+</div>
+<div class="grid grid-cols-4 gap-2 overflow-y-auto scroll-hide pb-4">
+<!-- Question 1: Answered -->
+<button class="flex flex-col items-center justify-center aspect-square rounded-lg border border-outline-variant bg-background hover:bg-surface-container-highest transition-all">
+<span class="font-label-sm text-label-sm text-primary-fixed-dim">1</span>
+<span class="material-symbols-outlined text-primary text-[14px]" data-icon="check_circle" style='font-variation-settings: "FILL" 1;'>check_circle</span>
+</button>
+<!-- Question 2: Current -->
+<button class="flex flex-col items-center justify-center aspect-square bg-primary text-on-primary rounded-lg border border-primary font-bold shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+<span class="font-label-sm text-label-sm">2</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="pending">pending</span>
+</button>
+<script>
+            const grid = document.currentScript.parentElement;
+            for (let i = 3; i <= 20; i++) {
+                const btn = document.createElement('button');
+                btn.className = "flex flex-col items-center justify-center aspect-square rounded-lg border border-outline-variant bg-background text-on-surface-variant hover:bg-surface-container-highest transition-all";
+                btn.innerHTML = `
+                    <span class="font-label-sm text-label-sm text-[#7dd3fc]">${i}</span>
+                    <span class="material-symbols-outlined text-[14px]" data-icon="radio_button_unchecked">radio_button_unchecked</span>
+                `;
+                grid.appendChild(btn);
+            }
+        </script>
+</div>
+<div class="mt-auto pt-4">
+<button class="w-full py-2 rounded-lg border border-primary text-primary font-label-sm text-label-sm hover:bg-primary/10 transition-colors uppercase tracking-wider">
+            Flag for Review
+        </button>
+</div>
+</aside>
+<!-- Main Canvas Area -->
+<main class="ml-64 mt-16 pb-32 pt-12">
+<div class="w-full px-gutter">
+<!-- Breadcrumb / Status -->
+<div class="flex items-center gap-2 mb-8">
+<span class="px-3 py-1 bg-surface-container-highest rounded-lg border border-outline-variant font-label-sm text-label-sm text-tertiary uppercase tracking-tighter">PHYSICS 101</span>
+<span class="text-outline-variant">/</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">Question 2 of 20</span>
+</div>
+<!-- Split Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter items-start">
+<!-- Left Column: Question Text and Image -->
+<div class="space-y-stack-lg">
+<div class="bg-surface-container border border-outline-variant rounded-xl p-8 shadow-xl">
+<h1 class="font-headline-lg text-2xl text-on-surface mb-stack-md leading-relaxed">
+                        A pendulum bob of mass <span class="text-primary">0.5 kg</span> is suspended by a string of length <span class="text-primary">2 meters</span>. If the bob is released from an angle of <span class="text-primary">30 degrees</span>, what is its maximum kinetic energy during the swing?
+                    </h1>
+<p class="font-body-md text-on-surface-variant mb-6 italic opacity-80">
+                        Assume gravity (g) = 9.8 m/s² and neglect air resistance. Round your answer to the nearest hundredth.
+                    </p>
+<div class="flex justify-center">
+<div class="w-full h-64 bg-[#f1f5f9] rounded-lg flex items-center justify-center overflow-hidden border border-outline-variant">
+<img alt="Physics Diagram" class="max-h-full object-contain mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBonKg2-7qlaOtufkuPwC5wFapV44tl88wEugpWBo0EA70tmvgCMrKXNQU3OPpZ4hkvDI5zk-JmCnljqs1mgwwHO3L7IMUBYusH-krqEqOcRhCs0S82ZaWFbtqZ8mSiAHc64VwXOfxtZb2vSrmsP4yfQtm5REfhE4Mxe16xT56qqH9sL57VAy6_n8S5BAuY7ZFc5hmqA1-M37S3-hR2Kc7Ivy5E6WaNSlpqLLy9rHjajvLNNQldoOI9XLdIe83w_Yrkc0kNFM6T8WzH"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Answer Options -->
+<div class="space-y-4">
+<!-- Option A -->
+<button class="choice-card w-full text-left bg-surface-container border border-outline-variant rounded-lg p-gutter flex items-center gap-gutter transition-all cursor-pointer group" onclick="selectChoice(this)">
+<div class="flex-shrink-0 w-10 h-10 rounded-lg border border-outline-variant flex items-center justify-center font-bold text-on-surface-variant choice-marker group-hover:border-primary transition-colors">A</div>
+<span class="font-body-md">0.66 Joules</span>
+</button>
+<!-- Option B (Selected) -->
+<button class="choice-card active w-full text-left bg-surface-container border-2 border-primary rounded-lg p-gutter flex items-center gap-gutter transition-all cursor-pointer shadow-[0_0_15px_rgba(59,130,246,0.1)]" onclick="selectChoice(this)">
+<div class="flex-shrink-0 w-10 h-10 rounded-lg bg-primary text-on-primary flex items-center justify-center font-bold choice-marker">B</div>
+<span class="font-body-md">1.31 Joules</span>
+</button>
+<!-- Option C -->
+<button class="choice-card w-full text-left bg-surface-container border border-outline-variant rounded-lg p-gutter flex items-center gap-gutter transition-all cursor-pointer group" onclick="selectChoice(this)">
+<div class="flex-shrink-0 w-10 h-10 rounded-lg border border-outline-variant flex items-center justify-center font-bold text-on-surface-variant choice-marker group-hover:border-primary transition-colors">C</div>
+<span class="font-body-md">2.45 Joules</span>
+</button>
+<!-- Option D -->
+<button class="choice-card w-full text-left bg-surface-container border border-outline-variant rounded-lg p-gutter flex items-center gap-gutter transition-all cursor-pointer group" onclick="selectChoice(this)">
+<div class="flex-shrink-0 w-10 h-10 rounded-lg border border-outline-variant flex items-center justify-center font-bold text-on-surface-variant choice-marker group-hover:border-primary transition-colors">D</div>
+<span class="font-body-md">4.90 Joules</span>
+</button>
+<div class="mt-6 space-y-4">
+<button class="flex items-center gap-2 px-4 py-2 text-tertiary hover:text-white transition-colors font-label-sm text-sm" id="toggle-explanation">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+                        View Explanation
+                    </button>
+<div class="hidden bg-code-bg border border-outline-variant rounded-xl p-6 font-code-md" id="explanation-section">
+<h3 class="text-tertiary mb-4 font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">terminal</span>
+                            EXPLANATION
+                        </h3>
+<div class="text-on-surface-variant space-y-4 leading-relaxed">
+<p>The correct answer is <b class="text-primary">B (1.31 Joules)</b>.</p>
+<p>Maximum kinetic energy occurs at the lowest point of the swing where all potential energy is converted into kinetic energy.</p>
+<div class="bg-black/40 p-4 rounded-lg border border-outline-variant/30 text-sm font-mono leading-relaxed">
+<span class="text-tertiary">// Potential Energy formula</span><br/>
+                                h = L * (1 - cos(θ))<br/>
+                                h = 2 * (1 - cos(30°)) ≈ 2 * (1 - 0.866) = <span class="text-[#7dd3fc]">0.268m</span><br/><br/>
+<span class="text-tertiary">// Max Energy Calculation</span><br/>
+                                PE_max = m * g * h<br/>
+                                PE_max = 0.5kg * 9.8m/s² * 0.268m ≈ <span class="text-primary">1.31 Joules</span>
+</div>
+<p class="text-sm opacity-70">According to the law of conservation of energy: <span class="text-on-surface">KE_max = PE_max</span>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Action Bar) -->
+<footer class="fixed bottom-0 left-0 w-full z-50 flex justify-between items-center px-gutter py-4 bg-surface-container border-t border-outline-variant">
+<div class="flex items-center gap-4">
+<button class="border border-outline-variant text-on-surface rounded-lg px-6 py-2 flex items-center gap-2 font-label-sm text-sm hover:bg-surface-container-highest transition-all active:scale-95">
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_back">arrow_back</span>
+            PREVIOUS
+        </button>
+<button class="bg-primary text-on-primary rounded-lg px-8 py-2 flex items-center gap-2 font-label-sm text-sm hover:brightness-110 transition-all active:scale-95 shadow-lg shadow-primary/20">
+            NEXT
+            <span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="flex items-center gap-6">
+<div class="w-48 h-1.5 bg-background border border-outline-variant rounded-full overflow-hidden hidden md:block">
+<div class="h-full bg-primary w-1/10 transition-all duration-500 shadow-[0_0_10px_#3b82f6]" style="width: 10%;"></div>
+</div>
+<button class="font-label-sm text-sm text-error hover:underline px-4 py-2 rounded-lg transition-colors uppercase tracking-widest">
+            Finish Attempt
+        </button>
+</div>
+</footer>
+<script>
+    document.getElementById('toggle-explanation').addEventListener('click', function() {
+        const section = document.getElementById('explanation-section');
+        const isHidden = section.classList.toggle('hidden');
+        this.querySelector('.material-symbols-outlined').textContent = isHidden ? 'visibility' : 'visibility_off';
+        this.childNodes[2].textContent = isHidden ? 'View Explanation' : 'Hide Explanation';
+    });
+
+    function selectChoice(element) {
+        document.querySelectorAll('.choice-card').forEach(card => {
+            card.classList.remove('active', 'border-2', 'border-primary', 'shadow-[0_0_15px_rgba(59,130,246,0.1)]');
+            card.classList.add('border');
+            const marker = card.querySelector('.choice-marker');
+            marker.classList.remove('bg-primary', 'text-on-primary');
+            marker.classList.add('border', 'border-outline-variant', 'text-on-surface-variant');
+        });
+        element.classList.add('active', 'border-2', 'border-primary', 'shadow-[0_0_15px_rgba(59,130,246,0.1)]');
+        element.classList.remove('border');
+        const marker = element.querySelector('.choice-marker');
+        marker.classList.add('bg-primary', 'text-on-primary');
+        marker.classList.remove('border', 'border-outline-variant', 'text-on-surface-variant');
+    }
+</script>
+</body></html>

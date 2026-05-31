@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, BarChart2, Settings, Code2 } from 'lucide-react';
+import { LayoutDashboard, BarChart2, Settings, Code2, ClipboardList } from 'lucide-react';
 import AICopilotWidget from './AICopilotWidget';
 
 export default function Sidebar({ onMutateSchedule, isMutating, showCopilot = true }) {
@@ -18,6 +18,7 @@ export default function Sidebar({ onMutateSchedule, isMutating, showCopilot = tr
       <nav className="flex-grow space-y-2">
         <NavItem to="/dashboard" icon={<LayoutDashboard size={20}/>} label="Dashboard" />
         <NavItem to="/dsa" icon={<Code2 size={20}/>} label="DSA Revision" />
+        <NavItem to="/mcq" icon={<ClipboardList size={20}/>} label="MCQ Assessment" />
         <NavItem to="/analytics" icon={<BarChart2 size={20}/>} label="Analytics" />
         <NavItem to="/settings" icon={<Settings size={20}/>} label="Settings" />
       </nav>
