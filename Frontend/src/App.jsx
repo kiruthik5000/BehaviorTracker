@@ -27,7 +27,7 @@ function App() {
         <Route path="/dsa" element={<Layout><DSARevision /></Layout>} />
         <Route path="/analytics" element={<Layout><Analytics /></Layout>} />
         <Route path="/settings" element={<Layout><Settings /></Layout>} />
-        <Route path="/mcq" element={<MCQAssessment />} />
+        <Route path="/mcq" element={<Layout><MCQAssessment /></Layout>} />
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </BrowserRouter>
