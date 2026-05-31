@@ -1,15 +1,17 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../api';
+import Chatbot from '../components/Chatbot';
 
 const FONT = { fontFamily: 'Inter, Geist, sans-serif' };
 
 /* ─── Category icon map ─── */
-const ICONS = {
-  javascript: '⚡', dsa: '🌲', react: '⚛️', backend: '🛠️',
-  mongodb: '🍃', frontend: '🎨', architecture: '🏗️', python: '🐍',
-  java: '☕', css: '🖌️', html: '📄',
-};
-const catIcon = (cat) => ICONS[cat?.toLowerCase()] ?? '📋';
+const ICONS = [
+  '⚡', '🌲', '⚛️', '🛠️',
+  '🍃', '🎨', '🏗️', '🐍',
+  '☕', '🖌️', '📄',
+];
+const catIcon = (cat) => ICONS[cat.length % ICONS.length] ?? '📋';
 
 /* ─── Difficulty badge ─── */
 function DifficultyBadge({ level }) {
@@ -80,6 +82,7 @@ export default function MCQAssessment() {
 
   /* ── Quiz/Results state ── */
   const [phase, setPhase]               = useState('dashboard'); // 'dashboard' | 'quiz' | 'results'
+  const [activeSidebar, setActiveSidebar] = useState('map');     // 'map' | 'chat' | null
   const [activeCategory, setActiveCategory] = useState(null);
   const [questions, setQuestions]       = useState([]);
   const [current, setCurrent]           = useState(0);
@@ -107,13 +110,9 @@ export default function MCQAssessment() {
   const q   = questions[current];
   const qId = q?._id;
   const select = useCallback((idx) => {
-    if (revealed[qId]) return;
     setAnswers(a => ({ ...a, [qId]: idx }));
-  }, [qId, revealed]);
-  const submit = () => {
-    if (answers[qId] === undefined) return;
-    setRevealed(r => ({ ...r, [qId]: true }));
-  };
+  }, [qId]);
+
   const score = questions.reduce((acc, q) => {
     const idx = answers[q._id];
     if (idx === undefined) return acc;
@@ -169,15 +168,15 @@ export default function MCQAssessment() {
           <span className="font-black text-lg text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">MCQ Results</span>
           <span className="text-xs text-slate-500 font-mono">{activeCategory}</span>
         </header>
-        <div className="flex-1 flex items-center justify-center px-6 py-12">
-          <div className="w-full max-w-lg">
-            <div className="bg-[#0f172a] border border-white/8 rounded-2xl p-10 text-center shadow-2xl">
+        <div className="flex-1 overflow-y-auto px-6 py-12">
+          <div className="max-w-2xl mx-auto w-full mt-4 sm:mt-10">
+            <div className="bg-[#0f172a] border border-white/8 rounded-2xl p-8 sm:p-12 text-center shadow-2xl">
               <ScoreRing pct={pct} />
-              <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-1">
+              <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-2">
                 {pct >= 70 ? '🏆 Excellent!' : pct >= 40 ? '📊 Good Effort' : '📝 Keep Practising'}
               </h1>
-              <p className="text-slate-400 text-sm mb-8">{activeCategory} — Assessment Complete</p>
-              <div className="grid grid-cols-4 gap-3 mb-8">
+              <p className="text-slate-400 text-sm mb-10">{activeCategory} — Assessment Complete</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
                 {[
                   { label: 'Score',   value: `${score}/${totalMarks}`, color: 'text-blue-400'    },
                   { label: 'Correct', value: correct,                  color: 'text-emerald-400' },
@@ -216,10 +215,16 @@ export default function MCQAssessment() {
     return (
       <div className="fixed inset-0 z-[999] bg-[#020617] flex flex-col text-slate-200" style={FONT}>
 
-        {/* Top bar */}
         <header className="flex items-center justify-between px-6 h-14 bg-[#0b1120]/95 backdrop-blur border-b border-white/5 shrink-0">
           <div className="flex items-center gap-3">
             <button onClick={backToDashboard} className="text-slate-400 hover:text-white text-sm transition-colors">← Back</button>
+            <span className="text-white/20">|</span>
+            <button 
+              onClick={() => setActiveSidebar(s => s === 'map' ? null : 'map')}
+              className={`text-sm font-semibold transition-colors ${activeSidebar === 'map' ? 'text-blue-400' : 'text-slate-400 hover:text-white'}`}
+            >
+              ☰ Map
+            </button>
             <span className="text-white/20">|</span>
             <span className="text-sm font-semibold text-slate-300">{activeCategory} Assessment</span>
           </div>
@@ -228,24 +233,31 @@ export default function MCQAssessment() {
             <div className="w-28 h-1.5 bg-white/10 rounded-full overflow-hidden">
               <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-500" style={{ width: `${progress}%` }}/>
             </div>
+            <span className="text-white/20 ml-2">|</span>
+            <button 
+              onClick={() => setActiveSidebar(s => s === 'chat' ? null : 'chat')}
+              className={`text-sm font-semibold transition-colors flex items-center gap-1.5 ${activeSidebar === 'chat' ? 'text-purple-400' : 'text-slate-400 hover:text-white'}`}
+            >
+              ✨ AI Chat
+            </button>
           </div>
         </header>
 
         <div className="flex flex-1 overflow-hidden">
           {/* Question navigator */}
-          <aside className="w-52 bg-[#0b1120] border-r border-white/5 p-4 flex flex-col overflow-y-auto shrink-0">
-            <div className="mb-4">
+          {activeSidebar === 'map' && (
+            <aside className="w-52 bg-[#0b1120] border-r border-white/5 p-4 flex flex-col overflow-y-auto shrink-0 shadow-2xl">
+              <div className="mb-4">
               <h2 className="text-sm font-bold text-slate-300 mb-0.5">Question Map</h2>
               <p className="text-xs text-slate-500 font-mono">{answeredCount} of {questions.length} answered</p>
             </div>
             <div className="grid grid-cols-4 gap-1.5 content-start">
               {questions.map((item, i) => {
-                const done = revealed[item._id];
+                const done = answers[item._id] !== undefined;
                 const active = i === current;
-                const ok = done && item.options?.[answers[item._id]] === item.correctAnswer;
                 let cls = 'flex items-center justify-center aspect-square rounded-lg border text-xs font-mono transition-all ';
                 if (active)    cls += 'bg-blue-600 border-blue-500 text-white font-bold ';
-                else if (done) cls += ok ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400 ' : 'bg-rose-500/20 border-rose-500/50 text-rose-400 ';
+                else if (done) cls += 'bg-blue-900/40 border-blue-500/40 text-blue-300 ';
                 else           cls += 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10 cursor-pointer ';
                 return <button key={item._id} className={cls} onClick={() => setCurrent(i)}>{i + 1}</button>;
               })}
@@ -255,6 +267,7 @@ export default function MCQAssessment() {
               Finish
             </button>
           </aside>
+          )}
 
           {/* Main quiz content */}
           <main className="flex-1 overflow-y-auto p-8 pb-24 min-w-0">
@@ -276,32 +289,16 @@ export default function MCQAssessment() {
                 {(q.options ?? []).map((opt, i) => (
                   <OptionButton key={i} label={String.fromCharCode(65 + i)} text={opt}
                     selected={chosenIdx === i} correct={correctIdx === i}
-                    revealed={isRevealed} onClick={() => select(i)} />
+                    revealed={false} onClick={() => select(i)} />
                 ))}
-                <div className="pt-1 space-y-3">
-                  {!isRevealed ? (
-                    <button onClick={submit} disabled={!isAnswered}
-                      className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-30 disabled:cursor-not-allowed text-white font-bold text-sm transition-all">
-                      Submit Answer
-                    </button>
-                  ) : q.explanation && (
-                    <button onClick={() => setShowExpl(s => ({ ...s, [qId]: !s[qId] }))}
-                      className="flex items-center gap-2 text-purple-400 hover:text-purple-300 text-sm font-semibold transition-colors">
-                      <span>{showExpl[qId] ? '▲' : '▼'}</span>
-                      {showExpl[qId] ? 'Hide' : 'View'} Explanation
-                    </button>
-                  )}
-                  {isRevealed && showExpl[qId] && q.explanation && (
-                    <div className="bg-[#12131d] border border-white/10 rounded-xl p-5 text-sm text-slate-300 leading-relaxed">
-                      <p className="text-purple-400 font-bold mb-2 uppercase text-xs tracking-widest">Explanation</p>
-                      <p>{q.explanation}</p>
-                      <p className="mt-3 text-blue-400 font-semibold text-xs">✓ Correct: {q.correctAnswer}</p>
-                    </div>
-                  )}
-                </div>
               </div>
             </div>
           </main>
+
+          {/* Chatbot Sidebar */}
+          {activeSidebar === 'chat' && (
+            <Chatbot questionContext={q} />
+          )}
         </div>
 
         {/* Bottom nav */}
@@ -431,7 +428,7 @@ export default function MCQAssessment() {
                     <p className="text-[10px] text-slate-500 uppercase tracking-widest mb-3">Instructions</p>
                     <ul className="space-y-1.5">
                       {[
-                        'Answer each question and submit before moving on.',
+                        'Click an option to lock in your answer.',
                         'Use the Question Map to jump between questions.',
                         'Your score is updated in real-time in the footer.',
                       ].map((t, i) => (
@@ -450,7 +447,7 @@ export default function MCQAssessment() {
                         ? 'border border-blue-500/40 text-blue-400 hover:bg-blue-500/10'
                         : 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/20'
                     }`}
-                  >
+                    >
                     {taken ? '↺ Retake Assessment' : 'Start Assessment ▶'}
                   </button>
                 </div>

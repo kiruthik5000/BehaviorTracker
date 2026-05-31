@@ -30,8 +30,6 @@ const mcqSchema = new mongoose.Schema(
 
     correctAnswer: String,
 
-    explanation: String,
-
     marks: {
       type: Number,
       default: 1,

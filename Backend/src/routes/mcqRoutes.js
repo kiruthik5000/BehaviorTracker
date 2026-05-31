@@ -8,4 +8,6 @@ router.post('/', mcqController.createMCQ);
 router.put('/:id', mcqController.updateMCQ);
 router.delete('/:id', mcqController.deleteMCQ);
 
+router.post('/chat', mcqController.askChatbot);
+
 module.exports = router;

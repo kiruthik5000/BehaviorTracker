@@ -1,4 +1,5 @@
 const MCQ = require("../models/MCQQuestion");
+const llmService = require("../services/llmService");
 
 // Get all MCQs
 exports.getAllMCQs = async (req, res) => {
@@ -49,6 +50,27 @@ exports.deleteMCQ = async (req, res) => {
     const mcq = await MCQ.findByIdAndDelete(req.params.id);
     if (!mcq) return res.status(404).json({ message: 'MCQ not found' });
     res.status(200).json({ message: 'MCQ deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Chatbot Endpoint
+exports.askChatbot = async (req, res) => {
+  try {
+    const { questionContext, conversationHistory, userPrompt } = req.body;
+    
+    if (!questionContext || !userPrompt) {
+      return res.status(400).json({ message: 'Missing question context or prompt.' });
+    }
+
+    const aiResponse = await llmService.askMCQChatbot(
+      questionContext, 
+      conversationHistory, 
+      userPrompt
+    );
+
+    res.status(200).json({ response: aiResponse });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
