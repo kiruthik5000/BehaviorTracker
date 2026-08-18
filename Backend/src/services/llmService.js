@@ -64,63 +64,6 @@ Ensure output is ONLY a valid JSON object with the "sessions" key. Do not includ
     throw new Error('Failed to modify schedule via AI.');
   }
 };
-
-const askMCQChatbot = async (questionContext, conversationHistory, userPrompt, clientApiKey) => {
-  try {
-    const apiKey = clientApiKey || process.env.HF_API_KEY || process.env.HF_TOKEN;
-    if (!apiKey) {
-      throw new Error('No Hugging Face API key configured.');
-    }
-
-    const client = new OpenAI({
-      baseURL: "https://router.huggingface.co/v1",
-      apiKey: apiKey,
-    });
-
-    const systemInstruction = `
-You are an expert tutor guiding a student through a coding/technical Multiple Choice Question.
-Provide helpful hints, explanations, or concept breakdowns.
-You MUST output your response strictly as a JSON object with the following schema:
-{
-  "type": "structured", // use "structured" for rich explanations, or "text" for simple conversational replies
-  "title": "String (e.g. Concept name or topic)",
-  "difficulty": "Easy" | "Medium" | "Hard" (optional),
-  "explanation": "String (The main conversational response or hint)",
-  "steps": ["Step 1", "Step 2"] (optional list of steps or bullet points),
-  "code": { "language": "javascript", "content": "..." } (optional code snippet),
-  "timeComplexity": "O(N)" (optional),
-  "spaceComplexity": "O(1)" (optional)
-}
-
-Here is the context of the question:
-Title: ${questionContext?.title || 'N/A'}
-Question: ${questionContext?.question || 'N/A'}
-Options: ${questionContext?.options ? questionContext.options.map((opt, i) => `${String.fromCharCode(65 + i)}: ${opt}`).join(' | ') : 'N/A'}
-Category: ${questionContext?.category || 'N/A'}
-`;
-
-    const messages = [
-      { role: "system", content: systemInstruction },
-      ...(conversationHistory || []),
-      { role: "user", content: userPrompt }
-    ];
-
-    const response = await client.chat.completions.create({
-      model: "meta-llama/Llama-3.3-70B-Instruct:groq",
-      messages: messages,
-      response_format: { type: "json_object" },
-      max_completion_tokens: 2000,
-    });
-
-    const outputText = response.choices[0]?.message?.content || "{}";
-    return JSON.parse(outputText);
-  } catch (error) {
-    console.error('LLM MCQ Chatbot Error:', error);
-    throw new Error('Failed to get response from AI.');
-  }
-};
-
 module.exports = {
-  modifyScheduleWithAI,
-  askMCQChatbot
+  modifyScheduleWithAI
 };
